@@ -139,7 +139,8 @@ python tests/test_parsers.py
 ## ⚙️ Configuration & RAG Usage
 1. Open the UI at `http://localhost:5173`.
 2. On the **API & Model Config** sidebar, enter your API Keys:
-   - **Gemini 1.5 Flash (Default)**: Enter your Google AI Studio API Key.
+   - **Gemini 2.0 Flash (Default)**: Enter your API Key.
+   - **Groq**:Enter your API Key.
    - **OpenAI**: Enter your OpenAI API Key and select it in the dropdown.
 3. Click **Save Config**.
 4. In the **Ingest Data Export** section, drag-and-drop or click to upload your data export archive (`.zip` or individual files).
