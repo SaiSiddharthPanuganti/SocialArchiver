@@ -87,7 +87,7 @@ export default function App() {
   const [openCitations, setOpenCitations] = useState<Record<string, boolean>>({});
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const chatBottomRef = useRef<HTMLDivElement>(null);
+  const chatMessagesRef = useRef<HTMLDivElement>(null);
   const pollingIntervalRef = useRef<number | null>(null);
 
   // Load configuration and database stats on mount
@@ -103,7 +103,12 @@ export default function App() {
   // Scroll chat to bottom on new messages and citation toggles
   useEffect(() => {
     const timer = setTimeout(() => {
-      chatBottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+      if (chatMessagesRef.current) {
+        chatMessagesRef.current.scrollTo({
+          top: chatMessagesRef.current.scrollHeight,
+          behavior: 'smooth'
+        });
+      }
     }, 80);
     return () => clearTimeout(timer);
   }, [messages, chatLoading, openCitations]);
@@ -612,7 +617,7 @@ export default function App() {
             )}
           </div>
         ) : (
-          <div className="chat-messages">
+          <div ref={chatMessagesRef} className="chat-messages">
             {messages.map((msg) => (
               <div key={msg.id} className={`message ${msg.role}`}>
                 <div className="avatar">
@@ -666,7 +671,7 @@ export default function App() {
                 </div>
               </div>
             ))}
-            <div ref={chatBottomRef} />
+            {/* Scroll bottom helper removed in favor of direct container scrolling */}
           </div>
         )}
 
