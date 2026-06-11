@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma_data:/app/backend/chroma_db
+    environment:
+      - LLM_PROVIDER=local  # Defaults to Gemini
+      - EMBEDDING_PROVIDER=local
+      # You can optionally set keys in environment or through the UI settings panel
+      # - GEMINI_API_KEY=your_key_here
+      # - OPENAI_API_KEY=your_key_here
+      # - GROQ_API_KEY=your_key_here
+
+volumes:
+  chroma_data:
