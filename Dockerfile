@@ -18,11 +18,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY backend/requirements.txt ./backend/
 RUN pip install --no-cache-dir -r backend/requirements.txt
 
-# Pre-download the Chroma ONNX model during build so it's baked into the image cache
-RUN python -c "from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2; ONNXMiniLM_L6_V2()"
-
 COPY backend/ ./backend/
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
+
+# Pre-download the Chroma ONNX model during build so it's baked into the image cache
+RUN python -c "from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2; ONNXMiniLM_L6_V2.DOWNLOAD_PATH = '/app/backend/onnx_models'; ONNXMiniLM_L6_V2()"
 
 EXPOSE 8000
 WORKDIR /app/backend

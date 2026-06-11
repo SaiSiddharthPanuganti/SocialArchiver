@@ -7,6 +7,8 @@ from datetime import datetime
 from typing import List, Dict, Any, Tuple, Optional
 import chromadb
 from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2
+# Set persistent ONNX download path within the workspace to avoid permission and user home directory mismatches at runtime
+ONNXMiniLM_L6_V2.DOWNLOAD_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "onnx_models")
 from openai import OpenAI
 from ingestion.base import SocialPost, UserProfile
 

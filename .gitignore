@@ -12,6 +12,8 @@ venv/
 chroma_db/
 backend/chroma_db/
 backend/backend/chroma_db/
+onnx_models/
+backend/onnx_models/
 config.json
 backend/config.json
 backend/backend/config.json
