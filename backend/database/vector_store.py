@@ -199,7 +199,7 @@ class VectorStoreManager:
             
         return chunks
 
-    def upsert_posts(self, posts: List[SocialPost], provider: str = "local", api_key: Optional[str] = None, batch_size: int = 128) -> int:
+    def upsert_posts(self, posts: List[SocialPost], provider: str = "local", api_key: Optional[str] = None, batch_size: int = 32) -> int:
         """Processes, chunks, embeds, and upserts social posts into ChromaDB.
 
         Performs deduplication using deterministic hashing.
