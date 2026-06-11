@@ -6,7 +6,7 @@ import numpy as np
 from datetime import datetime
 from typing import List, Dict, Any, Tuple, Optional
 import chromadb
-from sentence_transformers import SentenceTransformer
+from chromadb.utils.embedding_functions import ONNXMiniLM_L6_V2
 from openai import OpenAI
 from ingestion.base import SocialPost, UserProfile
 
@@ -34,11 +34,11 @@ class VectorStoreManager:
         self._local_model = None
 
     @property
-    def local_model(self) -> SentenceTransformer:
-        """Lazy load the sentence transformer model to save memory if not used."""
+    def local_model(self) -> ONNXMiniLM_L6_V2:
+        """Lazy load the local ONNX embedding model to save memory if not used."""
         if self._local_model is None:
-            # Using all-MiniLM-L6-v2 which is fast (384 dims) and highly accurate
-            self._local_model = SentenceTransformer('all-MiniLM-L6-v2')
+            # Using built-in Chroma ONNX all-MiniLM-L6-v2 to save memory and avoid PyTorch dependencies
+            self._local_model = ONNXMiniLM_L6_V2()
         return self._local_model
 
     def generate_embeddings(self, texts: List[str], provider: str, api_key: Optional[str] = None) -> List[List[float]]:
@@ -58,13 +58,8 @@ class VectorStoreManager:
             return [e.embedding for e in response.data]
         else:
             # Local Embedding
-            embeddings = self.local_model.encode(
-                texts,
-                batch_size=128,  # Efficient batching
-                show_progress_bar=False,
-                convert_to_numpy=True
-            )
-            return embeddings.tolist()
+            embeddings = self.local_model(texts)
+            return [e.tolist() for e in embeddings]
 
     def get_deterministic_id(self, post: SocialPost, chunk_idx: int = 0) -> str:
         """Generates a deterministic, unique, and reproducible UUID for a chunk."""
